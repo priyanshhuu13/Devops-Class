@@ -1,0 +1,199 @@
+Step 1
+
+Generate secrete key and secrete access key from amazon web consoel
+
+Click on your account on right side corner
+
+go to securty credentials
+
+go to access key section
+
+create access key
+
+if already 2 access keys are there and you dont remember their values you can Deactivate and Delete access keys
+
+
+Step2
+
+
+Download AWS CLI on your laptop
+
+
+you can download aws CLI client on windows/mac/linux
+
+
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+
+you can verify aws installed or not using command prompt or powershell or gitcm by typing aws --version command
+
+
+3) connect to aws account
+
+aws configure
+
+provide access key and secrete access key keep region default and outpupt format also default
+
+
+4) execute command
+
+aws s3 ls
+
+you will see all buckets in your account
+
+
+aws iam create-user --user-name MyUser   --- create user
+
+
+aws iam create-group --group-name MyIamGroup ------ create group
+
+you can refer to below link for quidck referende
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html
+
+
+create new bucket
+
+aws s3 mb s3://newbucketmorningbatch12dec
+
+Delete bucket
+
+aws s3 rb s3://newbucketmorningbatch12dec
+
+
+delete object in bucket
+
+aws s3 rm s3://amzn-s3-demo-bucket/example/filename.txt
+
+delete recursivitly
+
+aws s3 rm s3://amzn-s3-demo-bucket/example --recursive
+
+
+move and copy objects
+
+
+aws s3 mv s3://amzn-s3-demo-bucket/example s3://amzn-s3-demo-bucket/
+
+aws s3 cp s3://amzn-s3-demo-bucket/example s3://amzn-s3-demo-bucket/
+
+
+assigning permission to objects in bucket
+
+
+aws s3 cp s3://morningbatch026apsouth1bucket/awsquickref.txt s3://morningbatch026apsouth1bucket/awsmanofmatch.txt --acl public-read
+
+
+to put object from your PC
+
+aws s3api put-object --bucket morningbatch026apsouth1bucket --key batch825pemfile --body C:\Users\admin\Documents\batch825pemfile.pem
+
+to get object from S3
+
+?????????
+
+
+EC2 CLi commands
+
+To create key pair
+
+aws ec2 create-key-pair --key-name mynewkeyasia.ppk --key-type rsa --key-format ppk --output text > mynewkeyasia.ppk
+
+
+describe key pair
+
+aws ec2 describe-key-pairs --key-names key-pair-name
+
+delete key pair
+
+aws ec2 delete-key-pair --key-name mynewkeyasia.ppk
+
+
+Create Security group
+
+aws ec2 create-security-group --description mynewgroup --group-name clinewgroup --vpc-id vpc-0a2306cee83fcb6da --region ap-south-1
+
+modify security rules
+
+aws ec2 authorize-security-group-ingress --group-id sg-0f011483e7b29dc27 --protocol tcp --port 22 --cidr 203.0.113.0/24
+
+
+Delete security Group
+
+aws ec2 delete-security-group --group-name MySecurityGroup
+
+
+create ec2 instance
+
+aws ec2 run-instances --image-id ami-0614680123427b75e --count 1 --instance-type t2.micro --key-name morningbatchwindowskey --security-group-ids sg-0f011483e7b29dc27 --subnet-id subnet-02645bcd3689da367
+
+Create ec2 instance along with extra volume
+
+aws ec2 run-instances --image-id ami-0614680123427b75e --count 1 --instance-type t2.micro --key-name morningbatchwindowskey --security-group-ids sg-0f011483e7b29dc27 --subnet-id subnet-02645bcd3689da367 --block-device-mappings "[{\"DeviceName\":\"/dev/sdf\",\"Ebs\":{\"VolumeSize\":20,\"DeleteOnTermination\":false}}]"
+
+with snapshot name if you want to do ---- --block-device-mappings "[{\"DeviceName\":\"/dev/sdf\",\"Ebs\":{\"SnapshotId\":\"snap-a1b2c3d4\"}}]"
+
+--block-device-mappings "[{\"DeviceName\":\"/dev/sdf\",\"VirtualName\":\"ephemeral0\"},{\"DeviceName\":\"/dev/sdg\",\"VirtualName\":\"ephemeral1\"}]"
+
+
+describe instance
+
+aws ec2 describe-instances
+
+tag instance
+
+aws ec2 create-tags --resources  i-0d05f9a85174cc29b --tags Key=Name,Value=MyInstance
+
+terminate instance
+
+aws ec2 terminate-instances --instance-ids i-5203422c
+
+
+IAM
+
+create group
+
+aws iam create-group --group-name MyIamGroup
+
+create user
+
+aws iam create-user --user-name MyUser
+
+to add user to grpu
+
+
+aws iam add-user-to-group --user-name MyUser --group-name MyIamGroup
+
+
+get users in group
+
+aws iam get-group --group-name MyIamGroup
+
+
+reset password for IAM user
+
+aws iam create-login-profile --user-name MyUser --password My!User1Login8P@ssword --password-reset-required
+
+creating acces key for user
+
+
+aws iam create-access-key --user-name MyUser
+
+
+delete access key
+
+aws iam delete-access-key --user-name MyUser --access-key-id AKIAIOSFODNN7EXAMPLE
+
+create Auto scaling group and attached to LB
+
+aws autoscaling create-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --launch-template LaunchTemplateId=lt-1234567890abcde12 \
+    --target-group-arns arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/943f017f100becff \
+    --health-check-type ELB \
+    --health-check-grace-period 600 \
+    --min-size 1 \
+    --max-size 5 \
+    --vpc-zone-identifier "subnet-5ea0c127,subnet-6194ea3b,subnet-c934b782"
+
+
